@@ -1,16 +1,5 @@
+
 # Augment SWE-bench Verified Agent
-
-## Change log 4.6
-- .env file for API keys
-- specify insatance ids
-- Support Deepseek API through the `LiteLLM` library
-
-
-## Todolist
-- max tokens limitation
-- In my enviornment, the system cann't process concurrent requests even I set the number `--num-processes` to 2, Have a Check?
-
-
 
 
 [SWE-bench Verified](https://www.swebench.com/) tests how well AI systems handle software engineering tasks pulled from actual GitHub issues in popular open-source projects. Some example problems can be found in OpenAI’s [original blog post on the benchmark](https://openai.com/index/introducing-swe-bench-verified/). Where most coding benchmarks focus on isolated Leetcode-style programming problems, SWE-bench involves codebase navigation, iterating against a suite of regression tests, and overall much more complexity.
