@@ -609,33 +609,12 @@ class LiteLLMClient(LLMClient):
         api_base=None,
         thinking_tokens=0,
     ):
-        """初始化LiteLLM客户端
-        
-        Args:
-            model_name: 模型名称，遵循LiteLLM命名格式(如'deepseek/deepseek-v3')
-            max_retries: 最大重试次数
-            use_caching: 是否使用缓存
-            api_key: 可选的API密钥(会覆盖环境变量)
-            api_base: 可选的API基础URL
-            thinking_tokens: 思考令牌数量
-        """
-            
         self.model_name = model_name
         self.max_retries = max_retries
         self.use_caching = use_caching
         self.api_base = api_base
         self.thinking_tokens = thinking_tokens
         self.api_key = os.getenv("DEEPSEEK_API_KEY")
-        # # 设置API密钥(如果提供)
-        # if api_key:
-        #     provider = self._get_provider_from_model_name(model_name)
-        #     if provider == "deepseek":
-        #         os.environ["DEEPSEEK_API_KEY"] = api_key
-        #     elif provider == "anthropic":
-        #         os.environ["ANTHROPIC_API_KEY"] = api_key 
-        #     elif provider == "openai":
-        #         os.environ["OPENAI_API_KEY"] = api_key
-    
     def generate(
         self,
         messages: LLMMessages,
