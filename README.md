@@ -2,24 +2,27 @@
 
 ## Installation
 ```
-conda create -n py312 python=3.12
+git clone git@github.com:euyis1019/agent_evolve.git
 cd agent_evolve
-conda activate py312
-./setup.sh
-source .venv/bin/activate
-uv pip install litellm
+conda create -n code_agent python=3.12
+conda activate code_agent
+pip install -r requirements.txt
+pip install litellm
+pip install datasets
+pip install docker
 ```
 
 ## Usage
 ```
 python cli.py
+python run_agent_on_swebench_problem.py --num-examples 1 --num-candidate-solutions 1
+./run_instances.sh
 ```
 
 ## Change log 4.6
 - .env file for API keys
 - specify insatance ids
 - Support Deepseek API through the `LiteLLM` library
-
 
 ## Todolist
 - ~~max tokens limitation~~ Seem not necessary, there is a MAX_TURNS parameters.
