@@ -652,30 +652,30 @@ class LiteLLMClient(LLMClient):
                     
                     try:
                         print(f"[LiteLLM] Calling LiteLLM with model: {self.model_name}")
-                        # print(f"[LiteLLM] clean_kwargs: {clean_kwargs}")
+                        # #print(f"[LiteLLM] clean_kwargs: {clean_kwargs}")
                         response = completion(**clean_kwargs)#Need to check.
                         
                         # # 输出详细的响应结构信息，帮助调试
-                        # print(f"[LiteLLM] Response received, type: {type(response)}")
-                        # print(f"[LiteLLM] Response dir: {dir(response)}")
+                        # #print(f"[LiteLLM] Response received, type: {type(response)}")
+                        # #print(f"[LiteLLM] Response dir: {dir(response)}")
                         
                         # if hasattr(response, "choices") and response.choices:
-                        #     print(f"[LiteLLM] First choice type: {type(response.choices[0])}")
-                        #     print(f"[LiteLLM] First choice dir: {dir(response.choices[0])}")
+                        #     #print(f"[LiteLLM] First choice type: {type(response.choices[0])}")
+                        #     #print(f"[LiteLLM] First choice dir: {dir(response.choices[0])}")
                             
                         #     if hasattr(response.choices[0], "message"):
                         #         message = response.choices[0].message
-                        #         print(f"[LiteLLM] Message type: {type(message)}")
-                        #         print(f"[LiteLLM] Message dir: {dir(message)}")
+                        #         #print(f"[LiteLLM] Message type: {type(message)}")
+                        #         #print(f"[LiteLLM] Message dir: {dir(message)}")
                                 
                         #         # 检查是否有工具调用
                         #         if hasattr(message, "tool_calls") and message.tool_calls:
-                        #             print(f"[LiteLLM] Found tool_calls, count: {len(message.tool_calls)}")
+                        #             #print(f"[LiteLLM] Found tool_calls, count: {len(message.tool_calls)}")
                         #             for i, tc in enumerate(message.tool_calls):
-                        #                 print(f"[LiteLLM] Tool call {i} type: {type(tc)}")
-                        #                 print(f"[LiteLLM] Tool call {i} dir: {dir(tc)}")
+                        #                 #print(f"[LiteLLM] Tool call {i} type: {type(tc)}")
+                        #                 #print(f"[LiteLLM] Tool call {i} dir: {dir(tc)}")
                         #         elif isinstance(message, dict) and "tool_calls" in message:
-                        #             print(f"[LiteLLM] Found tool_calls in dict, count: {len(message['tool_calls'])}")
+                        #             #print(f"[LiteLLM] Found tool_calls in dict, count: {len(message['tool_calls'])}")
                         
                         result = self._convert_response(response)#Need to check.
                         
@@ -701,7 +701,7 @@ class LiteLLMClient(LLMClient):
                         
                         return result, message_metadata
                     except Exception as e:
-                        print(f"[LiteLLM] API error: {str(e)}")
+                        #print(f"[LiteLLM] API error: {str(e)}")
                         import traceback
                         print("[LiteLLM] Detailed error:")
                         traceback.print_exc()
@@ -713,7 +713,7 @@ class LiteLLMClient(LLMClient):
                         continue
                     raise
         except Exception as e:
-            print(f"[LiteLLM] Failed after {self.max_retries} retries: {str(e)}")
+            #print(f"[LiteLLM] Failed after {self.max_retries} retries: {str(e)}")
             error_message = f"LiteLLM API call failed: {str(e)}"
             return [TextResult(text=error_message)], {"error": str(e), "model": self.model_name}
     
@@ -726,13 +726,13 @@ class LiteLLMClient(LLMClient):
             formatted_messages.append({"role": "system", "content": system_prompt})
         
         # 打印输入消息以便调试
-        print(f"[LiteLLM] Formatting messages: {len(messages)} message groups")
+        #print(f"[LiteLLM] Formatting messages: {len(messages)} message groups")
         
         # 将消息组装到正确的格式
         for i, message_group in enumerate(messages):
             # 根据索引确定角色(偶数为用户，奇数为助手)
             role = "user" if i % 2 == 0 else "assistant"
-            print(f"[LiteLLM] Processing message group {i}, role: {role}, blocks: {len(message_group)}")
+            #print(f"[LiteLLM] Processing message group {i}, role: {role}, blocks: {len(message_group)}")
             
             # 初始化当前角色消息的内容
             content = []
@@ -741,19 +741,19 @@ class LiteLLMClient(LLMClient):
             
             # 处理每个消息块
             for block in message_group:
-                print(f"[LiteLLM] Processing block: {type(block)}")
+                #print(f"[LiteLLM] Processing block: {type(block)}")
                 
                 if isinstance(block, TextPrompt):
                     # 用户文本消息
                     if role == "user":
                         content.append(block.text)
-                        print(f"[LiteLLM] Added user text: {block.text[:50]}...")
+                        #print(f"[LiteLLM] Added user text: {block.text[:50]}...")
                         
                 elif isinstance(block, TextResult):
                     # 助手文本响应
                     if role == "assistant":
                         content.append(block.text)
-                        print(f"[LiteLLM] Added assistant text: {block.text[:50]}...")
+                        #print(f"[LiteLLM] Added assistant text: {block.text[:50]}...")
                         
                 elif isinstance(block, ToolCall):
                     # 助手工具调用
@@ -798,7 +798,7 @@ class LiteLLMClient(LLMClient):
                     "role": "user", 
                     "content": user_content
                 })
-                print(f"[LiteLLM] Added user message: {user_content[:50]}...")
+                #print(f"[LiteLLM] Added user message: {user_content[:50]}...")
                 
             elif role == "assistant" and (content or tool_calls):
                 # 助手消息
@@ -807,11 +807,11 @@ class LiteLLMClient(LLMClient):
                 if content:
                     assistant_content = content[0] if len(content) == 1 else "\n".join(content)
                     assistant_message["content"] = assistant_content
-                    print(f"[LiteLLM] Added assistant content: {assistant_content[:50]}...")
+                    #print(f"[LiteLLM] Added assistant content: {assistant_content[:50]}...")
                     
                 if tool_calls:
                     assistant_message["tool_calls"] = tool_calls
-                    print(f"[LiteLLM] Added {len(tool_calls)} tool calls to assistant message")
+                    #print(f"[LiteLLM] Added {len(tool_calls)} tool calls to assistant message")
                     
                 formatted_messages.append(assistant_message)
             
@@ -819,7 +819,7 @@ class LiteLLMClient(LLMClient):
             for tool_result in tool_results:
                 formatted_messages.append(tool_result)
         
-        print(f"[LiteLLM] Formatted {len(formatted_messages)} messages")
+        #print(f"[LiteLLM] Formatted {len(formatted_messages)} messages")
         return formatted_messages
     
     def _convert_tool_param(self, tool: ToolParam) -> dict:
@@ -842,7 +842,7 @@ class LiteLLMClient(LLMClient):
             message = choice.message
             
             # 打印详细响应信息以便调试
-            print(f"[LiteLLM] Processing response: {message}")
+            #print(f"[LiteLLM] Processing response: {message}")
             if hasattr(message, "tool_calls"):
                 print(f"[LiteLLM] Tool calls found (attribute): {message.tool_calls}")
             elif isinstance(message, dict) and "tool_calls" in message:
@@ -869,8 +869,8 @@ class LiteLLMClient(LLMClient):
                 for tool_call in tool_calls:
                     try:
                         # 打印工具调用详情以便调试
-                        print(f"[LiteLLM] Processing tool call: {tool_call}")
-                        print(f"[LiteLLM] Tool call type: {type(tool_call)}")
+                        #print(f"[LiteLLM] Processing tool call: {tool_call}")
+                        #print(f"[LiteLLM] Tool call type: {type(tool_call)}")
                         
                         # 获取工具类型，兼容不同格式
                         tool_type = None
@@ -882,7 +882,7 @@ class LiteLLMClient(LLMClient):
                         else:
                             tool_type = "function"
                             
-                        print(f"[LiteLLM] Tool type identified: {tool_type}")
+                        #print(f"[LiteLLM] Tool type identified: {tool_type}")
                         
                         # 处理函数类型工具调用
                         if tool_type == "function" or tool_call is not None:
@@ -926,8 +926,8 @@ class LiteLLMClient(LLMClient):
                             else:
                                 tool_id = f"tool_{uuid.uuid4()}"
                             
-                            print(f"[LiteLLM] Function details: name={function_name}, id={tool_id}")
-                            print(f"[LiteLLM] Arguments: {arguments}")
+                            #print(f"[LiteLLM] Function details: name={function_name}, id={tool_id}")
+                            #print(f"[LiteLLM] Arguments: {arguments}")
                             
                             # 解析参数
                             tool_input = None
@@ -942,12 +942,12 @@ class LiteLLMClient(LLMClient):
                                 else:
                                     tool_input = arguments
                             except Exception as e:
-                                print(f"[LiteLLM] Error parsing arguments: {e}")
+                                #print(f"[LiteLLM] Error parsing arguments: {e}")
                                 tool_input = arguments
                             
                             # 添加工具调用
                             if function_name:  # 只需要函数名，其他可以生成或默认
-                                print(f"[LiteLLM] Adding tool call: {function_name}")
+                                #print(f"[LiteLLM] Adding tool call: {function_name}")
                                 result.append(
                                     ToolCall(
                                         tool_call_id=tool_id,
@@ -956,7 +956,7 @@ class LiteLLMClient(LLMClient):
                                     )
                                 )
                     except Exception as e:
-                        print(f"[LiteLLM] Error processing tool call: {e}")
+                        #print(f"[LiteLLM] Error processing tool call: {e}")
                         import traceback
                         traceback.print_exc()
                         # 继续处理下一个工具调用
@@ -967,7 +967,7 @@ class LiteLLMClient(LLMClient):
                 result.append(TextResult(text=""))
                 
         except Exception as e:
-            print(f"[LiteLLM] Error in _convert_response: {str(e)}")
+            ##print(f"[LiteLLM] Error in _convert_response: {str(e)}")
             import traceback
             traceback.print_exc()
             result.append(TextResult(text=f"Error processing response: {str(e)}"))
