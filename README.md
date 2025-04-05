@@ -1,5 +1,20 @@
 # Augment SWE-bench Verified Agent
 
+## Installation
+```
+conda create -n py312 python=3.12
+cd agent_evolve
+conda activate py312
+./setup.sh
+source .venv/bin/activate
+uv pip install litellm
+```
+
+## Usage
+```
+python cli.py
+```
+
 ## Change log 4.6
 - .env file for API keys
 - specify insatance ids
