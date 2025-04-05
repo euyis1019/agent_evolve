@@ -54,3 +54,5 @@ htmlcov/
 .ruff_cache/
 .tox/
 .nox/
+git_push.sh
+pre-ensemble*
