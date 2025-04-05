@@ -22,8 +22,17 @@ from utils.workspace_manager import WorkspaceManager
 from utils.llm_client import get_client
 from prompts.instruction import INSTRUCTION_PROMPT
 
-MAX_OUTPUT_TOKENS_PER_TURN = 32768
-MAX_TURNS = 200
+MAX_OUTPUT_TOKENS_PER_TURN = 6400#Deepseek supports 6400
+MAX_TURNS = 20
+try:
+    from dotenv import load_dotenv
+    # 尝试加载.env文件
+    load_dotenv()
+    print("Loaded environment variables from .env file")
+except ImportError:
+    print("Warning: python-dotenv not installed. If you're using a .env file, please install it with: pip install python-dotenv")
+except Exception as e:
+    print(f"Warning: Failed to load .env file: {str(e)}")
 
 
 def main():
@@ -73,6 +82,19 @@ def main():
         action="store_true",
         default=False,
     )
+    parser.add_argument(
+        "--client_provider",
+        type=str,
+        choices=["anthropic-direct", "openai-direct", "litellm"],
+        default="litellm",
+        help="Model provider to use (default: litellm)."
+    )
+    parser.add_argument(
+        "--model-name",
+        type=str,
+        default="deepseekv3",
+        help="Model name to use. Defaults: deepseekv3 (litellm), claude-3-7-sonnet-20250219 (anthropic-direct), gpt-4o-mini (openai-direct)."
+    )
 
     args = parser.parse_args()
 
@@ -88,9 +110,7 @@ def main():
 
     # Check if ANTHROPIC_API_KEY is set
     if "ANTHROPIC_API_KEY" not in os.environ:
-        print("Error: ANTHROPIC_API_KEY environment variable is not set.")
-        print("Please set it to your Anthropic API key.")
-        sys.exit(1)
+        print("Warning: ANTHROPIC_API_KEY environment variable is not set.")
 
     # Initialize console
     console = Console()
@@ -114,8 +134,8 @@ def main():
 
     # Initialize LLM client
     client = get_client(
-        "anthropic-direct",
-        model_name="claude-3-7-sonnet-20250219",
+        args.client_provider,
+        model_name=args.model_name,
         use_caching=True,
     )
 
