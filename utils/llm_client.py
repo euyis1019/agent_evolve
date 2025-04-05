@@ -627,10 +627,10 @@ class LiteLLMClient(LLMClient):
     ) -> Tuple[list[AssistantContentBlock], dict[str, Any]]:
         """使用LiteLLM生成响应"""
         
-        formatted_messages = self._format_messages(messages, system_prompt)# Its format is like SWE-Agent,a list of json.
+        formatted_messages = self._format_messages(messages, system_prompt)# Its format is like SWE-Agent,a list of json.# Need to check
         
         # 转换工具格式为OpenAI兼容格式
-        formatted_tools = [self._convert_tool_param(tool) for tool in tools] if tools else None
+        formatted_tools = [self._convert_tool_param(tool) for tool in tools] if tools else None#Need to check
         
         try:
             for attempt in range(self.max_retries + 1):
@@ -653,7 +653,7 @@ class LiteLLMClient(LLMClient):
                     try:
                         print(f"[LiteLLM] Calling LiteLLM with model: {self.model_name}")
                         # #print(f"[LiteLLM] clean_kwargs: {clean_kwargs}")
-                        response = completion(**clean_kwargs)#Need to check.
+                        response = completion(**clean_kwargs)
                         
                         # # 输出详细的响应结构信息，帮助调试
                         # #print(f"[LiteLLM] Response received, type: {type(response)}")
