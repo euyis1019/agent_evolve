@@ -23,7 +23,7 @@ from utils.llm_client import get_client
 from prompts.instruction import INSTRUCTION_PROMPT
 
 MAX_OUTPUT_TOKENS_PER_TURN = 6400#Deepseek supports 6400
-MAX_TURNS = 20
+MAX_TURNS = 12
 try:
     from dotenv import load_dotenv
     # 尝试加载.env文件
