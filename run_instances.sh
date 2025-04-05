@@ -2,8 +2,8 @@
 # 这个脚本展示如何使用--instance-ids参数来运行特定的SWE-bench实例
 
 # 设置并行
-NUM_PROCESSES=1
-NUM_CANDIDATE_SOLUTIONS=1
+NUM_PROCESSES=30
+NUM_CANDIDATE_SOLUTIONS=2
 
 # 设置最大运行时间（单位：秒）
 # 这将限制每个agent在单个问题上的最大运行时间

@@ -2,6 +2,7 @@
 
 ## Installation
 ```
+source ~/.bashrc
 git clone git@github.com:euyis1019/agent_evolve.git
 cd agent_evolve
 conda create -n code_agent python=3.12
@@ -14,8 +15,11 @@ pip install docker
 
 ## Usage
 ```
+# Case Testing
 python cli.py
 python run_agent_on_swebench_problem.py --num-examples 1 --num-candidate-solutions 1
+
+# Running
 ./run_instances.sh
 ```
 
@@ -24,7 +28,7 @@ python run_agent_on_swebench_problem.py --num-examples 1 --num-candidate-solutio
 - specify insatance ids
 - Support Deepseek API through the `LiteLLM` library
 
-## Todolist
+## TODO
 - ~~max tokens limitation~~ Seem not necessary, there is a MAX_TURNS parameters.
 - In my enviornment, the system cann't process concurrent requests even I set the number `--num-processes` to 2, Have a Check?
 - #Need to check Label.
