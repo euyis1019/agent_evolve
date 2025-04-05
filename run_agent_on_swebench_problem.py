@@ -198,6 +198,11 @@ def main():
         default=8,
         help="Number of candidate solutions to generate for each example",
     )
+    parser.add_argument(
+        "--instance-ids",
+        nargs="+",
+        help="List of specific instance IDs to run (overrides shard settings)",
+    )
 
     args = parser.parse_args()
 
@@ -221,13 +226,25 @@ def main():
     swebench_dataset = load_dataset("princeton-nlp/SWE-bench_Verified")[  # pyright: ignore[reportIndexIssue]
         "test"
     ].to_pandas()  # pyright: ignore
-
-    # Sharding
-    num_examples_per_shard = len(swebench_dataset) // args.shard_ct  # pyright: ignore[reportArgumentType]
-    examples = swebench_dataset.iloc[  # pyright: ignore[reportAttributeAccessIssue]
-        args.shard_id * num_examples_per_shard : (args.shard_id + 1)
-        * num_examples_per_shard
-    ]
+    if args.instance_ids:
+        console.print(f"Filtering dataset to specified instance IDs: {args.instance_ids}")
+        # Filter the dataset to only include the specified instance IDs
+        examples = swebench_dataset[swebench_dataset["instance_id"].isin(args.instance_ids)]
+        if len(examples) == 0:
+            console.print("[bold red]Error: None of the specified instance IDs were found in the dataset![/bold red]")
+            sys.exit(1)
+        if len(examples) != len(args.instance_ids):
+            found_ids = set(examples["instance_id"].tolist())
+            missing_ids = set(args.instance_ids) - found_ids
+            console.print(f"[bold yellow]Warning: Some specified instance IDs were not found: {missing_ids}[/bold yellow]")
+        num_examples = len(examples)
+    else:
+        # Sharding
+        num_examples_per_shard = len(swebench_dataset) // args.shard_ct  # pyright: ignore[reportArgumentType]
+        examples = swebench_dataset.iloc[  # pyright: ignore[reportAttributeAccessIssue]
+            args.shard_id * num_examples_per_shard : (args.shard_id + 1)
+            * num_examples_per_shard
+        ]
 
     # Get the number of examples to run
     assert args.num_examples is None or args.num_examples <= len(examples), (
@@ -246,15 +263,22 @@ def main():
         "Selected examples:",
         "\n - " + "\n - ".join(examples.iloc[:num_examples]["instance_id"].tolist()),
     )
-
+    
     # List to store all diff data
     all_diff_data = []
 
     # get workspace base dir
     workspace_base_path = Path(f"/tmp/workspace/{uuid.uuid4().hex[:8]}").resolve()
     console.print(f"Workspace base path: {workspace_base_path}")
+    timestamp = int(time.time())
 
-    output_path = f"pre-ensemble_results_shard{args.shard_id}_of_{args.shard_ct}.jsonl"
+    # 如果提供了instance_ids参数
+    if args.instance_ids:
+    # 创建输出路径，修正拼写错误
+        output_path = f"instances_{timestamp}"
+    # 可能还需要更多处理逻辑，比如：
+    else:
+        output_path = f"pre-ensemble_results_shard{args.shard_id}_of_{args.shard_ct}.jsonl"
 
     # Iterate over the specified number of examples
     for i in range(num_examples):

@@ -606,13 +606,11 @@ class LiteLLMClient(LLMClient):
         model_name,
         max_retries=2,
         use_caching=True,#DeepSeek doesn't require to specify.
-        api_base=None,
         thinking_tokens=0,
     ):
         self.model_name = model_name
         self.max_retries = max_retries
         self.use_caching = use_caching
-        self.api_base = api_base
         self.thinking_tokens = thinking_tokens
         self.api_key = os.getenv("DEEPSEEK_API_KEY")
     def generate(
