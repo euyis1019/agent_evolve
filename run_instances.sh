@@ -46,7 +46,7 @@ django__django-14792
 )
 
 # 运行脚本
-echo "ljy2024" | sudo -S /home/ljy/miniforge3/envs/code_agent/bin/python run_agent_on_swebench_problem.py \
+echo "ljy2024" | python run_agent_on_swebench_problem.py \
   --instance-ids "${INSTANCE_IDS[@]}" \
   --num-processes $NUM_PROCESSES \
   --num-candidate-solutions $NUM_CANDIDATE_SOLUTIONS \
