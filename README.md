@@ -21,6 +21,7 @@ python run_agent_on_swebench_problem.py --num-examples 1 --num-candidate-solutio
 
 # Running
 ./run_instances.sh
+nohup ./run_instances.sh > outlog_20250406.txt 2>&1 &
 ```
 
 ## Change log 4.6
